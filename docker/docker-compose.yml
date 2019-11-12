@@ -1,0 +1,14 @@
+version: '2'
+services:
+  python36:
+    container_name: cronpi36
+    build: .
+    volumes:
+      - ../:/opt
+    ports:
+      - "22:22"
+
+    working_dir: /opt
+    tty: true
+    stdin_open: true
+    privileged: true

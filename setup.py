@@ -5,18 +5,18 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="cronpi",
-    version="1.0.0",
+    version="2.0.0",
     author="dakc",
     author_email="dakc@outlook.jp",
-    description="a small crontab deploying package for python3",
+    description="a small crontab deploying package for python",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/dakc/cronpi",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python ",
         "License :: OSI Approved :: MIT License",
         "Operating System :: POSIX :: Linux",
     ],
-    python_requires='>=3.0',
+    License="MIT",
 )

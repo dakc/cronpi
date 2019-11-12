@@ -1,35 +1,94 @@
-# cronpi
-A small tool for deploying crontab into a Linux System By using Python3.
-> Install crontabs into the system if it's not installed.
-This will override if the crontab with same command already exists in crontab
+[![Build Status](https://travis-ci.com/dakc/cronpi.svg?branch=master)](https://travis-ci.com/dakc/cronpi)
+[![pypi](https://img.shields.io/pypi/dm/cronpi)](https://pypi.org/project/cronpi/) 
+[![GitHub license](https://img.shields.io/github/license/dakc/majidai.svg?style=popout)](https://raw.githubusercontent.com/dakc/cronpi/master/LICENSE) 
 
-## Install
+# cronpi
+A small tool for deploying crontab jobs into a unix-like system, eg. Linux/Mac from python.
+> cronpi makes jobs more ***human readable*** and works on both 2.X and 3.X version.
+
+
+## Installation
 ```bash
 pip install cronpi
 ```
 
 ## Usage
-Putting mouse over the function will show the detail information of that function. 
-It shows 
-1. description of the function
-2. argument type and description
-3. use cases
+cronpi has following functions
 
-![title](https://raw.githubusercontent.com/dakc/cronpi/master/usage.png)
+| SN  |      Name       |                                    Description                                    |
+| --- | --------------- | --------------------------------------------------------------------------------- |
+| 1.  | run_by_date     | job that runs just once by setting date in format YYYY-MM-DD HH:mm                |
+| 2.  | run_every_day   | job that runs every day at given time HH:mm                                       |
+| 3.  | run_every_week  | job that runs every week at the given time of given weekdays                      |
+| 4.  | run_every_month | job that runs every month at the given time of given days of a month              |
+| 5.  | run_every_year  | job that runs  at the given time of given days of given months                    |
+| 6.  | run_custom      | command will be exactly similar to single line which we write during "crontab -e" |
 
-## functions
-cronpi has following functions.
-1. deploy_daily
-2. deploy_monthly
-3. deploy_yearly
-4. deploy_minutely
-5. deploy_by_weekday
-6. deploy
+Each functions take two parameters
+###### &lt;command to execute&gt;, &lt;isOverwrite=bool&gt;?
 
-From 1~5 the name of the function denote what they do. 6th deploy function will deploy the command which we write while editing crontab.
+|  parameter  |  type  |                                       description                                        |
+| ----------- | ------ | ---------------------------------------------------------------------------------------- |
+| command     | string | This command will be executed as scheduled                                               |
+| isOverwrite | bool   | It is optional and default value is false, which means cronpi will always insert new job |
 
+>cronpi will always install a new cron job if only command is passed as parameter or isOverwrite is set to False.
+If command passed as first parameter already exists in cronjon and "isOverwrite=True" is passed as second parameter ,then it will update the time of running the job instead of adding new job.
 ```python
-cronpi.deploy("* * * * * sh /run/some/commands.sh")
+cronpi.XXXX("/some/command", isOverwrite=True)
+```
+
+#### Use Case 1 - Run once
+1. Run a job at 20th october 2020 at 5:30PM
+```python
+cronpi.run_by_date("/some/command").on("2020-10-20 5:30pm")
+```
+
+#### Use Case 2 - Run every day
+1. Run a job daily at 5:30PM
+```python
+cronpi.run_every_day("/some/command").on("5:30pm")
+```
+
+#### Use Case 3 - Run every week
+1. Run a job at every sunday at 5:30PM
+```python
+cronpi.run_every_week("/some/command").on("sunday", time="17:30")
+```
+
+2. Run a job at every saturday and sunday at 5:30PM
+```python
+cronpi.run_every_week("/some/command").on(["sat", "sun"], time="5:30PM")
+```
+
+#### Use Case 4 - Run every month
+1. Run a job at every 10th of a month at 5:30PM
+```python
+cronpi.run_every_month("/some/command").on(10, time="17:30")
+```
+
+2. Run a job at every 10th and 20th of a month at 5:30PM
+```python
+cronpi.run_every_month("/some/command").on([10,20], time="17:30")
+```
+
+
+#### Use Case 5 - Run every year
+1. Run a job at every 10th january at 5:30am
+```python
+cronpi.run_every_year("/some/command").on("january", day=10, time="5:30am")
+```
+
+2. Run a job at every 10th of january, april and october at 5:30AM
+```python
+cronpi.run_every_year("/some/command").on(["jan", "oct"], day=10, time="5:30")
+```
+
+#### Use Case 6 - run like crontab
+Add a job to crontab by passing the command that we input to "crontab -e" command. 
+1. Run a job that runs at every minute
+```python
+cronpi.run_custom("* * * * * /some/command")
 ```
 
 ```bash
@@ -44,28 +103,21 @@ cronpi.deploy("* * * * * sh /run/some/commands.sh")
 # * * * * * command to execut
 ```
 
-## Below are the use cases for Running job Daily
-### 1. Run daily at 0:00
+#### Helper Function - Get list of current jobs
+cronpi has a helper function named "get_job_list" which will retrive the the job items in list.
 ```python
-cronpi.deploy_daily("sh /some/command.sh")
-```
-
-### 2. Run daily at 5:00AM
-```python
-cronpi.deploy_daily("sh /some/command.sh", 5)
-```
-
-### 3. Run daily at 5:30AM
-```python
-cronpi.deploy_daily("sh /some/command.sh", 5, 30)
+cronpi.get_job_list()
 ```
 
 
-*For others put the mouse over the function and see detail.*
 
+## Release information
+### Nov 12th, 2019 (ver@2.0.0)
+* restructured the library format so that it is more human readable.
+```python
+    cronpi.run_every_month("/some/command")
+        .on([10,20], time="1:30AM")
+```
 
-## Note
-Only support in unix-like system, eg. Linux/Mac
-
-## License
-[MIT](./LICENSE)
+### Nov 7th, 2019 (ver@1.0.0)
+* released first version
