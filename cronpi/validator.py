@@ -16,7 +16,7 @@ ERR_WEEKDAY_FORMAT_NOT_VALID = "weekday should be either string having single da
 ERR_CMD_LENGTH_INVALID = "command string should be more then single letter."
 ERR_JOB_TIME_FORMAT_NOT_VALID = "job_time parameter is not a valid format. It should be in 'HH:mm' format."
 ERR_JOB_DATE_FORMAT_NOT_VALID = "date is not a valid format. It should be in 'YYYY-MM-DD HH:mm' format.(AM or PM as suffix is optional)"
-ERR_JOB_DATE_NOT_VALID_SPAN = "date is not valid. It should be future time within a span of single year."
+ERR_JOB_DATE_NOT_VALID_SPAN = "date is not valid. It should be future time."
 
 def validate_command(command, overwrite):
     if not isinstance(command, str):
@@ -40,15 +40,12 @@ def get_time_once(job_time):
         raise ValueError(ERR_JOB_DATE_FORMAT_NOT_VALID)
 
     # check if date is past
+    (hr, mn) = get_time("{}:{}{}".format(m.group(4), m.group(5),am_pm))
     job_time_dt = datetime.strptime(job_time, "%Y-%m-%d %H:%M")
+    job_time_dt = job_time_dt.replace(hour=hr, minute=mn)
     if job_time_dt < datetime.now():
         raise ValueError(ERR_JOB_DATE_NOT_VALID_SPAN)
-
-    diff = (job_time_dt - datetime.now())
-    if diff.days > 365:
-        raise ValueError(ERR_JOB_DATE_NOT_VALID_SPAN)
-
-    (hr, mn) = get_time("{}:{}{}".format(m.group(4), m.group(5),am_pm))
+    
     return m.group(2), m.group(3), hr, mn
 
 def get_time(job_time):

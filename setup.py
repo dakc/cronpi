@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="cronpi",
-    version="2.0.0",
+    version="2.0.1",
     author="dakc",
     author_email="dakc@outlook.jp",
     description="a small crontab deploying package for python",

@@ -17,7 +17,7 @@ cronpi has following functions
 
 | SN  |      Name       |                                    Description                                    |
 | --- | --------------- | --------------------------------------------------------------------------------- |
-| 1.  | run_by_date     | job that runs just once by setting date in format YYYY-MM-DD HH:mm                |
+| 1.  | run_by_date     | job that runs just by setting date in format YYYY-MM-DD HH:mm                |
 | 2.  | run_every_day   | job that runs every day at given time HH:mm                                       |
 | 3.  | run_every_week  | job that runs every week at the given time of given weekdays                      |
 | 4.  | run_every_month | job that runs every month at the given time of given days of a month              |
@@ -38,37 +38,53 @@ If command passed as first parameter already exists in cronjon and "isOverwrite=
 cronpi.XXXX("/some/command", isOverwrite=True)
 ```
 
-#### Use Case 1 - Run once
+Time used as parameter can contain or may not contain AM|PM prefix.
+For eg, following two parameters represent same time.
+```
+5:30pm = 17:30
+```
+  
+  
+  
+
+#### Use Case 1 - Run By Date
 1. Run a job at 20th october 2020 at 5:30PM
 ```python
+import cronpi
 cronpi.run_by_date("/some/command").on("2020-10-20 5:30pm")
 ```
+※ This command will run every year after if the command is not deleted from crontab manually.
 
 #### Use Case 2 - Run every day
 1. Run a job daily at 5:30PM
 ```python
+import cronpi
 cronpi.run_every_day("/some/command").on("5:30pm")
 ```
 
 #### Use Case 3 - Run every week
 1. Run a job at every sunday at 5:30PM
 ```python
+import cronpi
 cronpi.run_every_week("/some/command").on("sunday", time="17:30")
 ```
 
 2. Run a job at every saturday and sunday at 5:30PM
 ```python
+import cronpi
 cronpi.run_every_week("/some/command").on(["sat", "sun"], time="5:30PM")
 ```
 
 #### Use Case 4 - Run every month
 1. Run a job at every 10th of a month at 5:30PM
 ```python
+import cronpi
 cronpi.run_every_month("/some/command").on(10, time="17:30")
 ```
 
 2. Run a job at every 10th and 20th of a month at 5:30PM
 ```python
+import cronpi
 cronpi.run_every_month("/some/command").on([10,20], time="17:30")
 ```
 
@@ -76,11 +92,13 @@ cronpi.run_every_month("/some/command").on([10,20], time="17:30")
 #### Use Case 5 - Run every year
 1. Run a job at every 10th january at 5:30am
 ```python
+import cronpi
 cronpi.run_every_year("/some/command").on("january", day=10, time="5:30am")
 ```
 
 2. Run a job at every 10th of january, april and october at 5:30AM
 ```python
+import cronpi
 cronpi.run_every_year("/some/command").on(["jan", "oct"], day=10, time="5:30")
 ```
 
@@ -88,6 +106,7 @@ cronpi.run_every_year("/some/command").on(["jan", "oct"], day=10, time="5:30")
 Add a job to crontab by passing the command that we input to "crontab -e" command. 
 1. Run a job that runs at every minute
 ```python
+import cronpi
 cronpi.run_custom("* * * * * /some/command")
 ```
 
@@ -106,6 +125,7 @@ cronpi.run_custom("* * * * * /some/command")
 #### Helper Function - Get list of current jobs
 cronpi has a helper function named "get_job_list" which will retrive the the job items in list.
 ```python
+import cronpi
 cronpi.get_job_list()
 ```
 

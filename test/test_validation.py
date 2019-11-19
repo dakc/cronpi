@@ -67,8 +67,6 @@ class Testcronpi(unittest.TestCase):
         """
         with self.assertRaisesRegex(ValueError, cronpi.validator.ERR_JOB_DATE_NOT_VALID_SPAN):
             cronpi.run_by_date("ls", isOverwrite=True).on("2018-10-20 7:30")
-        with self.assertRaisesRegex(ValueError, cronpi.validator.ERR_JOB_DATE_NOT_VALID_SPAN):
-            cronpi.run_by_date("ls", isOverwrite=True).on("2050-10-20 7:30")
 
     def test_deploy_like_crontab(self):
         """
